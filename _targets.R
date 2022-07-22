@@ -19,5 +19,8 @@ list(
   
   # Add the Rmd report thing as a target too
   # See https://books.ropensci.org/targets/literate-programming.html
-  tar_render(analysis_thing, "penguin-analysis.Rmd")
+  tar_render(analysis_thing, "penguin-analysis.Rmd"),
+  
+  # Render a whole Quarto website?!
+  tar_quarto(website, path = "analysis")
 )

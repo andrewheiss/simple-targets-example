@@ -1,0 +1,35 @@
+---
+title: "Model stuff"
+---
+
+
+```{r setup, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(brms)
+library(tidybayes)
+library(broom.mixed)
+library(kableExtra)
+library(targets)
+
+withr::with_dir(here::here(), {
+  # Load the clean data
+  tar_load(penguins_clean)
+  
+  fun_model <- tar_read(model1)
+})
+```
+
+```{r warning=FALSE}
+tidy(fun_model) %>% 
+  kbl() %>% 
+  kable_styling()
+```
+
+```{r}
+fun_model %>% 
+  gather_draws(b_flipper_length_mm, b_bill_length_mm) %>% 
+  ggplot(aes(x = .value, y = .variable, fill = .variable)) +
+  stat_halfeye() +
+  geom_vline(xintercept = 0) +
+  guides(fill = "none")
+```

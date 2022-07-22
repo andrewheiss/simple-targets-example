@@ -1,0 +1,24 @@
+---
+title: "Exploratory data analysis"
+---
+
+```{r setup, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(targets)
+
+withr::with_dir(here::here(), {
+  # Load the clean data
+  tar_load(penguins_clean)
+})
+```
+
+# Exploratory data analysis
+
+Hello Simpson's Paradox:
+
+```{r message=FALSE}
+ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species)) +
+  geom_smooth(aes(color = species), method = "lm", se = FALSE) +
+  geom_smooth(method = "lm", se = FALSE)
+```
