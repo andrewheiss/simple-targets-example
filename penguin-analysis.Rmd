@@ -1,0 +1,53 @@
+---
+title: "Penguins!"
+---
+
+```{r setup, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(brms)
+library(tidybayes)
+library(broom.mixed)
+library(kableExtra)
+library(targets)
+
+# To load a targets object, you can either use tar_load(), which loads it with
+# the same name that targets uses internally:
+
+# Load the clean data
+tar_load(penguins_clean)
+
+# Or you can use tar_read() to give it a new name:
+
+# Load the model
+fun_model <- tar_read(model1)
+```
+
+
+# Exploratory data analysis
+
+Hello Simpson's Paradox:
+
+```{r message=FALSE}
+ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species)) +
+  geom_smooth(aes(color = species), method = "lm", se = FALSE) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+# Look at the model
+
+```{r warning=FALSE}
+tidy(fun_model) %>% 
+  kbl() %>% 
+  kable_styling()
+```
+
+```{r}
+fun_model %>% 
+  gather_draws(b_flipper_length_mm, b_bill_length_mm) %>% 
+  ggplot(aes(x = .value, y = .variable, fill = .variable)) +
+  stat_halfeye() +
+  geom_vline(xintercept = 0) +
+  guides(fill = "none")
+```
+
